@@ -1,11 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import * as playwright from 'playwright-aws-lambda';
+import chromium from 'mxschmitt-chrome-aws-lambda';
 import { getAbsoluteURL } from 'utils/utils';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  await playwright.loadFont("https://raw.githack.com/googlei18n/noto-emoji/master/fonts/NotoColorEmoji.ttf")
+  await chromium.font("https://raw.githack.com/googlei18n/noto-emoji/master/fonts/NotoColorEmoji.ttf")
+  const browser = await chromium.playwright().launch({
+    executablePath: await chromium.executablePath || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    args: chromium.args,
+  })
 
-  const browser = await playwright.launchChromium();
   const page = await browser.newPage({
     viewport: {
       width: 1200,
